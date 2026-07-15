@@ -6,7 +6,7 @@ description: >
   采购公告、投标方案、技术方案、商务标书等场景。即使用户只是提供了招标链接或招标文件，
   未明确说"标书"二字，只要涉及响应政府采购/招标需求，都应使用本技能。本技能覆盖从
   招标文件解读、评分策略分析、投标方案撰写到最终docx文档生成的全流程。
-compatibility: python-docx, pdfplumber (via conda environment 'bid-skills')
+compatibility: python-docx, pdfplumber (venv: binaries/python/envs/bid 或 conda 'bid-skills')
 ---
 # 政府采购投标文件编写专家
 
@@ -64,6 +64,26 @@ compatibility: python-docx, pdfplumber (via conda environment 'bid-skills')
      - 具体化（给出数字、时间、流程、交付物）
      - 专业化（使用行业术语、展示技术深度）
      - 差异化（体现自身优势，但不过度承诺）
+   **技术标深度扩展要求（采购方案必须 ≥100 页、专业、逐条响应实际内容）**：
+
+   - 采购方案不得仅罗列招标条款，必须扩展为完整、专业的技术标书。标准结构为
+     **12 章 + 附录**：
+     1. 项目理解与分析（背景/概况/需求解读/边界/重难点/评分策略/需求—能力矩阵/差异化优势）；
+     2. 总体服务方案设计（理念/三层架构/SLA指标/标准体系/服务目录/全生命周期/工具/知识基线）；
+     3-5. 各服务模块详细方案（对招标“其他服务要求”逐条【招标要求】+【我方响应】，每条量化、可操作）；
+     6. 项目组织与团队管理（架构/RACI/资质/稳定性/培训/绩效/沟通/文档）；
+     7. 服务流程与质量管理体系（ITIL/ITSS：事件/问题/变更/配置/工单/知识/SLA/度量/厂商）；
+     8. 信息安全与合规管理（ISO27001：数据/信创/权限/保密/等保/审计/供应链）；
+     9. 应急响应与业务连续性（ISO22301：预案/分级/重要保障/演练/BIA）；
+     10. 培训与知识转移；11. 服务交付/验收/满意度；12. 服务承诺与保障；
+     附录：SOP索引、故障知识库、报告样例、岗位说明书、应急预案全文、风险登记册、
+     ISO27001控制映射、SOP全文（盐田范例40项）、过渡移交、复盘样例、SLA细则、CMDB、信创适配、性能容量、等保对照、知识管理、沟通例会、文档版本、驻场规范等；
+     第二层深度附录（盐田范例新增）：ITIL运维流程全集（6流程）、ISO/IEC 27001:2022控制项映射全文、岗位职责说明书（12岗）、培训教材详本、故障案例知识库（14例）、补充SOP全集（14项）、补充质量检查单（8模块）、补充管理制度（8项）、服务报告样例与字段、验收测试用例全集、过渡与知识转移计划、工具平台详介、SLA完整定义、沟通例会机制。盐田范例共 **A–VV 四十余项附录**。
+   - 每章须含：方法论叙述 + 流程步骤 + 量化指标 + 交付物；结构化信息（RACI/风险/SLA/Checklist）**优先用叙述展开**，仅在确需对照时才用表格（全篇表格控制在个位数，用户明确要求“不要建那么多表格”）。
+   - **核心写法：厚叙述、少表格**。参考范本《FB人工智能大模型管理服务第一标段》（171 页 / 624 段 / 仅 16 表 / 约 7.3 万汉字，正文:表格字数比约 7.8）：其厚度来自大量方法论叙述、流程文字、案例故事、制度全文，而非表格堆叠。本项目须沿用此风格——用文字把方案写厚、写透。
+   - **严禁空泛与复制粘贴填充**；所有内容须对接本项目实际要求，确保专业、可追溯、能落地。
+   - **达到 100+ 页的落地路径（推荐：厚叙述少表格 + FB 范本格式对齐 + 响应文件格式）**：以 `scripts/generate_yantian_prose.py` 为母版（`ProseBidGenerator`），将 SOP/检查单/风险/案例/制度/附录全部叙述化展开，仅保留 2 张必要表格（故障分级、SLA 矩阵）。在母版之上分层追加深度附录：`generate_yantian_prose_full.py`（附录 Q–AA）、`generate_yantian_prose_deep.py`（AB–AG 全文级 SOP/岗位/复盘/用例）、`generate_yantian_prose_v2.py`（AH–AO 制度全文/ITIL/ISO 映射）、`generate_yantian_prose_v3.py`（AP–BB 深度运营）、`generate_yantian_prose_v4.py`（BC–BF 叙事与能力延展）。**最终以 `scripts/generate_yantian_fb.py`（`FbBidGenerator`）统一对齐《FB人工智能大模型管理服务第一标段》的标题格式（宋体加粗黑色、H1=16/H2=14/H3=12、左对齐）与表格格式（宋体12pt、表头宋体加粗12pt、单线边框+浅蓝底纹），并将版心设为上/下1in、左/右1.25in、行距1.5倍**；其内部分层 `_expand_fb()` 至 `_expand_fb6()` 共六批附录（BG–CV），持续扩充技术专项深度。**若用户进一步要求按《响应文件格式》提供正式封面、投标函、开标一览表、费用说明表、产品清单、偏离表、授权委托书、法定代表人身份证明等前件，并在技术小点下插入架构/流程/组织/安全等示意图，则使用 `scripts/generate_yantian_response.py`（`ResponseBidGenerator`）**，该脚本在 FB 格式母版基础上自动绘制 8 张专业示意图（Pillow 生成）并嵌入文档，同时扩写技术概述、逐条响应、落地保障详述与典型案例。盐田政务微信范例实测：**1470 段 / 6 表 / 约 6.5 万汉字 / 8 张图 / 真实约 152 页**，正文:表格字数比约 77。做法是把 ITIL 流程、ISO 27001 控制项、岗位职责、培训教材、故障案例、管理制度、SLA 定义、验收用例**以完整叙述或全文展开**，并辅以规范化响应文件前件与可视化图表，既满足页数硬指标，又确保全部内容真实、专业、可追溯、格式合规。
+   - 备选路线（表格偏多，仅在对表格有特殊要求时选用）：`generate_yantian_bid_full.py` + `expand_yantian_bid_full.py`（12 章 + 四十余项附录 A–VV，约 240 表）。
 6. **撰写辅助章节**：
 
    - 供应商基本情况表：使用 `附件1模板` 格式（包含关联关系、人员情况等完整信息）
@@ -80,8 +100,7 @@ compatibility: python-docx, pdfplumber (via conda environment 'bid-skills')
    - 使用 `scripts/generate_bid_template.py` 作为模板基础
    - 将撰写好的内容填充到模板中
    - 确保格式与标书示例完全一致
-   - 字体：正文 宋体12pt，标题 黑体（H1=16pt, H2=15pt, H3=14pt）
-   - 全文行距1.5倍，正文左对齐
+   - 字体：正文 宋体12pt，标题 **宋体加粗黑色**（H1=16pt、H2=14pt、H3=12pt、左对齐，对齐范本《FB人工智能大模型管理服务第一标段》）；表格 宋体12pt、表头宋体加粗12pt + 浅蓝底纹（#D5E8F0）单线边框；版心 上/下1in、左/右1.25in、全文行距1.5倍
    - 完整格式规范见 `references/format_spec.md`
 8. **质量检查**：
 
@@ -110,29 +129,98 @@ compatibility: python-docx, pdfplumber (via conda environment 'bid-skills')
 
 凡是可以用表格呈现的信息（费用明细、团队配置、业绩清单、资质证书、响应对照表等），优先使用表格。表头使用黑体加粗配浅蓝背景（#D5E8F0）。
 
+> **例外（重要）**：当用户明确要求“不要建那么多表格”“内容写厚、用文字撑页数”时（如盐田政务微信项目对标《FB人工智能大模型管理服务第一标段》），应切换为**厚叙述、少表格**写法——把 SOP、检查单、风险、案例、制度、流程等**用叙述文字展开**，全篇表格控制在个位数（仅故障分级、SLA 矩阵等确需对照者保留）。此时页数靠正文汉字量支撑（目标 ≥4.2 万汉字 / 真实约 100 页），而非靠表格堆叠。对应实现见上文“推荐路线：厚叙述、少表格”。
+
 ### 善用评分规则
 
 时刻记住评分权重——采购方案40分是最高的，所以这部分内容需要最丰富、最详细。团队11分和公司实力8分需要提供证明材料支撑。诚信5分只要有承诺函就能拿满。
 
-## 模板和脚本
+## 运行环境与脚本
 
-### 生成模板
+所有生成脚本依赖 `python-docx`。请先准备隔离环境（任选其一）：
 
-```bash
-conda run -n bid-skills python scripts/generate_bid_template.py --output <输出路径.docx>
-```
+- 推荐：本机托管 venv —— `C:\Users\小乐\.workbuddy\binaries\python\envs\bid\Scripts\python.exe`（已安装 python-docx，可直接运行脚本）
+- 或自建：`python -m venv .venv && .venv\Scripts\pip install python-docx`
 
-### 分析招标PDF
+下文示例统一使用 `python` 指代"已含 python-docx 的解释器"。
 
-```bash
-conda run -n bid-skills python scripts/extract_pdf.py --input <招标文件.pdf> [--output <输出路径.txt>]
-```
-
-### 分析标书docx格式
+### 生成模板（基础版，含八大章节）
 
 ```bash
-conda run -n bid-skills python scripts/analyze_docx_format.py --input <标书示例.docx> [--output-dir <输出目录>]
+python scripts/generate_bid_template.py --output <输出路径.docx>
 ```
+
+### 分析招标 PDF
+
+```bash
+python scripts/extract_pdf.py --input <招标文件.pdf> [--output <输出路径.txt>]
+```
+
+### 分析标书 docx 格式
+
+```bash
+python scripts/analyze_docx_format.py --input <标书示例.docx> [--output-dir <输出目录>]
+```
+
+### 生成完整深度技术标（≥100 页能力，范例：盐田政务微信项目）
+
+**推荐路线：厚叙述、少表格 + FB 范本格式对齐（用户明确要求）**
+
+```bash
+# 母版（12 章 + 附录 A–P，约 90 页，仅 2 表）
+python scripts/generate_yantian_prose.py --output <输出路径.docx>
+
+# 完整扩充（母版 + 附录 Q–BB，约 100+ 真实页，仅 9 表）
+python scripts/generate_yantian_prose_v4.py --output <输出路径.docx>
+
+# ★ 最终产出（对齐 FB 范本标题/表格格式 + 版心，约 130 真实页，仅 9 表）—— 盐田范例默认交付
+python scripts/generate_yantian_fb.py --output <输出路径.docx>
+
+# ★★ 响应文件格式完整版（含正式封面、投标函、开标一览表、费用说明表、产品清单、偏离表、授权委托书、法定代表人身份证明 + 8 张示意图 + 全部技术附录，约 150+ 真实页）—— 当用户要求按《响应文件格式》提交时选用
+python scripts/generate_yantian_response.py --output <输出路径.docx>
+
+# 中间档（任选其一追加深度）：
+#   generate_yantian_prose_full.py  （附录 Q–AA）
+#   generate_yantian_prose_deep.py  （AB–AG 全文级 SOP/岗位/复盘/用例）
+#   generate_yantian_prose_v2.py    （AH–AO 制度全文/ITIL/ISO 映射）
+#   generate_yantian_prose_v3.py    （AP–BB 深度运营）
+```
+
+> 厚叙述路线以 `generate_yantian_prose.py` 的 `ProseBidGenerator` 为母版，继承 `generate_yantian_bid_full.py`
+> 的 `FullBidGenerator`（含 SOPS/CHECKLISTS/RISKS 数据与【招标要求】+【我方响应】响应模式），
+> 将 SOP/检查单/风险/案例/制度/附录**全部叙述化展开**，全篇仅保留 2 张必要表格（故障分级、SLA 矩阵）。
+> 各 `_expandN()` 子类在母版上分层追加深度附录，最终 `generate_yantian_fb.py` 的 `FbBidGenerator`
+> 在统一对齐《FB人工智能大模型管理服务第一标段》的**标题格式（宋体加粗黑色、H1=16/H2=14/H3=12、左对齐）、
+> 表格格式（宋体12pt、表头宋体加粗12pt、单线边框+浅蓝底纹）、版心（上/下1in、左/右1.25in、行距1.5倍）**后，
+> 输出 **1308 段 / 9 表 / 约 5.6 万汉字 / 真实约 130 页** 的技术标（内部 `_expand_fb` 至 `_expand_fb6` 共六批附录 BG–CV）。
+> 因格式与 FB 范本完全一致（427 字/页），页数随正文字数线性可达：FB 范本 7.3 万汉字→171 页，本标 5.6 万汉字→约 130 页。
+> **`generate_yantian_response.py`（`ResponseBidGenerator`）在此基础上进一步增加正式响应文件前件**
+> （封面、投标函、开标一览表、费用说明表、产品清单、偏离表、授权委托书、法定代表人身份证明），
+> 并以 Pillow 绘制 8 张架构/流程/组织/安全/培训/路线图并嵌入技术小点下，同时扩写技术概述、逐条响应、'
+> 落地保障详述与典型案例，输出 **1470 段 / 6 表 / 约 6.5 万汉字 / 8 张图 / 真实约 152 页** 的响应文件格式完整版。
+> **这是可参数化的深度技术标母版**：将脚本顶部的项目常量（项目名称、采购单位、预算、服务期、
+> 各服务模块参数、招标条款原文）替换为目标项目，即可为任意政府采购运维/服务类项目生成同等深度的技术标。
+> 全部内容均为真实、专业、可追溯内容（不靠空泛填充、不靠堆表凑页）。
+
+**备选路线：表格偏多（仅在对表格有特殊要求时选用）**
+
+```bash
+# 主脚本（默认即 100+ 页扩展版）
+python scripts/generate_yantian_bid.py --output <输出路径.docx>
+
+# 仅第一层（12 章 + 附录 A–HH，约 100+ 页）
+python scripts/generate_yantian_bid_full.py --output <输出路径.docx>
+
+# 完整扩展（第一层 + 第二层附录 II–VV，约 140+ 真实页）
+python scripts/expand_yantian_bid_full.py --output <输出路径.docx>
+```
+
+> `generate_yantian_bid_full.py` 继承 `generate_bid_template.py` 的格式与 `generate_yantian_bid.py` 的基础章节，
+> 将"一、采购方案"扩展为 **12 章深度技术方案 + 三十余项附录（A–HH）**，覆盖组织/质量/安全/
+> 应急/培训/验收等保障体系，并对招标"其他服务要求"逐条以【招标要求】+【我方响应】响应。
+> `expand_yantian_bid_full.py` 的 `ExpandedBidGenerator` 在母版基础上追加**第二层深度附录 II–VV**
+> （ITIL流程全集、ISO 27001控制映射、岗位职责、培训详本、故障案例库、补充SOP/检查单/制度、报告样例、
+> 验收用例、过渡计划、工具、SLA全定义、沟通例会），使单一运维类项目稳定达到真实 140+ 页。
 
 ## 参考文件
 
