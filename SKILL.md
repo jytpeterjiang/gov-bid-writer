@@ -141,3 +141,7 @@ conda run -n bid-skills python scripts/analyze_docx_format.py --input <标书示
 - `references/format_spec.md` — 标书格式规范（字体、段落、表格、页面）
 - `references/scoring_strategy.md` — 评分策略和得分技巧
 - `references/writing_guide.md` — 各章节的详细写作指南和范例
+
+## 项目仓库
+
+[GitHub](https://github.com/jytpeterjiang/gov-bid-writer)
